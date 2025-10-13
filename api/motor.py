@@ -8,6 +8,7 @@ AIN2 = 24   # Direction pin 2
 STBY = 25   # Standby pin
 
 # Setup
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PWMA, GPIO.OUT)
 GPIO.setup(AIN1, GPIO.OUT)

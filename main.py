@@ -18,27 +18,29 @@ def motor_control(q:mp.Queue):
             if(not q.empty()):
                 item = q.get()
             else:
-                pass
+                continue
 
             match item[0]:
                 case ControlType.FORWARD:
+                    print(f"Setting Speed to {item[1]}")
                     motor.motor_forward(int(item[1]))
                 case ControlType.BACKWARD:
+                    print(f"Setting Reverse Speed to {item[1]}")
                     motor.motor_reverse(int(item[1]))
                 case ControlType.STOP:
                     motor.motor_brake()
 
-        except:
-            print("Exiting Process")
+        except Exception as e:
+            print("Exiting Motor Process because of " + str(e))
             break
 
 def input_control(q:mp.Queue):
-    counter = 0
+    counter = 20
     while True:
-        try:     
+        try:
             q.put([ControlType.FORWARD, counter % 100])
             time.sleep(0.5)
-            counter += 1
+            counter += 20
         except:
             print("Exiting Input")
             break
@@ -46,15 +48,18 @@ def input_control(q:mp.Queue):
 if __name__ == "__main__":
 	# Setup Queue
     # Input is [ControlType, Value]
-    q = mp.Queue()
+    try:
+        q = mp.Queue()
 
-	# Setup Motor and Input Processes
-    motor_process = mp.Process(target=motor_control, args=(q,))
-    input_process = mp.Process(target=input_control, args=(q,))
+    # Setup Motor and Input Processes
+        motor_process = mp.Process(target=motor_control, args=(q,))
+        input_process = mp.Process(target=input_control, args=(q,))
 
     # Start Processes
-    motor_process.start()
-    input_process.start()
+        motor_process.start()
+        input_process.start()
 
-    motor_process.join()
-    input_process.join()
+        motor_process.join()
+        input_process.join()
+    except:
+        motor.cleanup()
