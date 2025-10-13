@@ -1,0 +1,6 @@
+colorzero==2.0
+evdev==1.9.2
+gpiozero==2.0.1
+pigpio==1.78
+RPi.GPIO==0.7.1
+setuptools==80.9.0
