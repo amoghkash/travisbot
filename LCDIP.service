@@ -1,0 +1,15 @@
+[Unit]
+Description=Run My Python Script at the End of Boot
+After=network-online.target multi-user.target
+
+[Service]
+ExecStart=/home/travisbot/LCIP/myenv/bin/python3 /home/travisbot/LCIP/LCDIP.py
+WorkingDirectory=/home/travisbot
+StandardOutput=journal
+StandardError=journal
+Restart=no
+User=travisbot
+
+[Install]
+WantedBy=multi-user.target
+
