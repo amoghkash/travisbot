@@ -45,6 +45,7 @@ def cleanup():
     motor_stop()
     standby(False)
     pwm.stop()
+    GPIO.cleanup()
 
 # Example usage
 if __name__ == "__main__":

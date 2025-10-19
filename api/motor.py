@@ -16,6 +16,7 @@ STBY = 25   # Standby pin
 servoPin = 00
 
 # Setup
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(PWMA, GPIO.OUT)
 GPIO.setup(AIN1, GPIO.OUT)

@@ -1,10 +1,19 @@
 import evdev
 import math
+from gpiozero import Servo
+from time import sleep
+#servo = AngularServo(13, min_angle = 0, max_angle = 180, min_pulse_width = 0.5/1000, max_pulse_width = 2.5/1000)
+servo = Servo(13)
+servo.value - 0
+def setAngle(angle):
+    servoAngle = (angle/-90)-1
+    servoAngle = round(servoAngle, 1)
+    print(f"Servo Angle is {servoAngle}")
+    servo.value = servoAngle
+    sleep(0.5)
 
-devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-for device in devices:
-    print(device.path, device.name, device.phys)
-
+#for device in devices:
+ #   print(device.path, device.name, device.phys)
 device = evdev.InputDevice('/dev/input/event4') # Replace eventX with the correct device path
 print(device)
 counter = 0
@@ -31,10 +40,13 @@ for event in device.read_loop():
             yValue = previous_righty_movement.value
             xValue = event.value
             radius = (yValue ** 2 + xValue ** 2) ** 0.5
-            if radius >= 28000:
+            print(f"Radius is {radius}")
+            if radius >=28000:
                 angle = math.atan2(yValue, xValue)
                 angle = math.degrees(angle)
                 print(f"Angle is {angle}")
+                setAngle(angle)
+
 
     elif event.code == 4:
         print("This is 4, right JS y movement")
