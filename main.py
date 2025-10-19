@@ -27,6 +27,13 @@ def motor_control(q:mp.Queue):
                     motor.motor_reverse(int(item[1]))
                 case ControlType.STOP:
                     motor.motor_brake()
+                case ControlType.LEFT:
+                    motor.steerLeft(int(item[1]))
+                case ControlType.LEFT:
+                    motor.steerRight(int(item[1]))
+                case ControlType.STRAIGHT:
+                    motor.steerStraight()
+
 
         except:
             print("Exiting Process")

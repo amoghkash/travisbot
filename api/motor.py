@@ -1,11 +1,19 @@
 import RPi.GPIO as GPIO
 import time
+from gpiozero import Servo
 
 # Pin definitions
 PWMA = 18   # PWM pin for speed
 AIN1 = 23   # Direction pin 1
 AIN2 = 24   # Direction pin 2
 STBY = 25   # Standby pin
+
+PWMB = 18   # PWM pin for speed
+BIN1 = 23   # Direction pin 1
+BIN2 = 24   # Direction pin 2
+STBY = 25   # Standby pin
+
+servoPin = 00
 
 # Setup
 GPIO.setmode(GPIO.BCM)
@@ -15,37 +23,67 @@ GPIO.setup(AIN2, GPIO.OUT)
 GPIO.setup(STBY, GPIO.OUT)
 
 # Initialize PWM at 50,000Hz
-pwm = GPIO.PWM(PWMA, 5000)
-pwm.start(0)
+pwmA = GPIO.PWM(PWMA, 5000)
+pwmA.start(0)
+
+#pwmB = GPIO.PWM(PWMB, 5000)
+#pwmB.start(0)
+servo = Servo(servoPin)
+
+# Throttle Control
 
 def standby(enable=True):
+    global GPIO
     GPIO.output(STBY, GPIO.HIGH if enable else GPIO.LOW)
 
 def motor_forward(speed=100):
+    global pwmA
+    global GPIO
     standby(True)
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.LOW)
-    pwm.ChangeDutyCycle(speed)
+    pwmA.ChangeDutyCycle(speed)
 
 def motor_reverse(speed=100):
+    global pwmA
+    global GPIO
     standby(True)
     GPIO.output(AIN1, GPIO.LOW)
     GPIO.output(AIN2, GPIO.HIGH)
-    pwm.ChangeDutyCycle(speed)
+    pwmA.ChangeDutyCycle(speed)
 
 def motor_stop():
-    pwm.ChangeDutyCycle(0)
+    global pwmA
+    pwmA.ChangeDutyCycle(0)
 
 def motor_brake():
+    global pwmA
+    global GPIO
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.HIGH)
-    pwm.ChangeDutyCycle(0)
+    pwmA.ChangeDutyCycle(0)
+
+# Steering Control
+def steerLeft(value:int=100):
+    global servo
+    servo.max()
+
+def steerRight(value:int=100):
+    global servo
+    servo.min()
+
+def steerStraight():
+    global servo
+    servo.mid()
 
 def cleanup():
+    global pwmA
+    global GPIO
     motor_stop()
     standby(False)
-    pwm.stop()
+    pwmA.stop()
     GPIO.cleanup()
+    servo.close()
 
 # Example usage
 if __name__ == "__main__":
