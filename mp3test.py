@@ -1,7 +1,7 @@
 import serial
 from time import sleep
 ser = serial.Serial('/dev/serial0', 9600, timeout=1)
-sleep(2)
+sleep(1)
 def df_command(command, param=0, feedback=True):
     """
     Build a 10-byte DFPlayer Mini command frame.
@@ -51,18 +51,28 @@ media = 1 #what should the media equal? Answer: should equal 1
 #ser.write(df_command(0x43))
 #while True:
 
-sleep(0.1)
-cmd = df_command(0x0C, 0) #this command resets the player
-ser.write(serial.to_bytes(cmd))
-sleep(1)
-cmd = df_command(0x09, 1) #this cmd specifies playback source to TF card (0x09 is cmd to specify playback src)
-ser.write(serial.to_bytes(cmd))
-sleep(1)
-cmd = df_command(0x07, 0)  # 0x07 = Specify EQ to normal (0)
-ser.write(serial.to_bytes(cmd)) #trying this shit out from stack exchange
-sleep(1)
-cmd = df_command(0x06, 9) #this cmd specifies the volume to 9 (0x06 is cmd to specify volume, 9 is parameter)\
+#sleep(0.1)
+#cmd = df_command(0x0C, 0) #this command resets the player
+#ser.write(serial.to_bytes(cmd))
+#sleep(1)
+#cmd = df_command(0x09, 1) #this cmd specifies playback source to TF card (0x09 is cmd to specify playback src)
+#ser.write(serial.to_bytes(cmd))
+#sleep(1)
+#cmd = df_command(0x07, 0)  # 0x07 = Specify EQ to normal (0)
+#ser.write(serial.to_bytes(cmd)) #trying this shit out from stack exchange
+#sleep(1)
+cmd = df_command(0x06, 15) #this cmd specifies the volume to 9 (0x06 is cmd to specify volume, 9 is parameter)\
 ser.write(serial.to_bytes(cmd)) 
 sleep(1)
-cmd = df_command(0x11 , 1) #cmd to specify start repeat play
+#cmd = df_command(0x03, 0)
+#ser.write(serial.to_bytes(cmd))
+sleep(0.5)
+for i in range(6):
+    cmd = df_command(0x03, i)
+    ser.write(serial.to_bytes(cmd))
+    sleep(2)
+cmd = df_command(0x0D) #cmd to specify start repeat play
 ser.write(serial.to_bytes(cmd))
+sleep(0.5)
+#cmd = df_command(0x0E) #cmd to specify start repeat play
+#ser.write(serial.to_bytes(cmd))
