@@ -2,7 +2,7 @@ import RPi.GPIO as GPIO
 import time
 
 # Pin definitions
-PWMA = 18   # PWM pin for speed
+PWMA = 16   # PWM pin for speed
 AIN1 = 23   # Direction pin 1
 AIN2 = 24   # Direction pin 2
 STBY = 25   # Standby pin
@@ -11,6 +11,7 @@ STBY = 25   # Standby pin
 def initialize_motor():
     global pwmA
     global GPIO
+    GPIO.setmode(GPIO.BOARD)
     pwmA = GPIO.PWM(PWMA, 1000)
     pwmA.start(0)
 

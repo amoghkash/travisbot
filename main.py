@@ -35,6 +35,7 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 if __name__ == "__main__":
+    motor.initialize_motor()
     while True:
         item = None
         device = evdev.InputDevice('/dev/input/event4') # Replace eventX with the correct device path
