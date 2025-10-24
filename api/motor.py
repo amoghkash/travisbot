@@ -24,9 +24,8 @@ GPIO.setup(AIN2, GPIO.OUT)
 GPIO.setup(STBY, GPIO.OUT)
 
 # Initialize PWM at 50,000Hz
-pwmA = GPIO.PWM(PWMA, 50000)
-pwmA.start(0)
-pwmA.ChangeDutyCycle(0)
+pwmA = PWMOutputDevice(PWMA, frequency=5000)
+pwmA.value = 0
 #pwmB = GPIO.PWM(PWMB, 5000)
 #pwmB.start(0)
 
@@ -43,7 +42,7 @@ def motor_forward(speed=100):
     print(f'Setting Speed to {speed}%')
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.LOW)
-    pwmA.ChangeDutyCycle(speed)
+    pwmA.value = speed
 
 def motor_reverse(speed=100):
     global pwmA
@@ -51,18 +50,18 @@ def motor_reverse(speed=100):
     standby(True)
     GPIO.output(AIN1, GPIO.LOW)
     GPIO.output(AIN2, GPIO.HIGH)
-    pwmA.ChangeDutyCycle(speed)
+    pwmA.value = speed
 
 def motor_stop():
     global pwmA
-    pwmA.ChangeDutyCycle(0)
+    pwmA.value = 0
 
 def motor_brake():
     global pwmA
     global GPIO
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.HIGH)
-    pwmA.ChangeDutyCycle(0)
+    pwmA.value = 0
 
 # Steering Control
 def steerLeft(value:int=100):
@@ -82,7 +81,7 @@ def cleanup():
     global GPIO
     motor_stop()
     standby(False)
-    pwmA.stop()
+    pwmA.close()
     GPIO.cleanup()
     #servo.close()
 
