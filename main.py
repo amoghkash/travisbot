@@ -15,34 +15,7 @@ class ControlType(Enum):
     STRAIGHT = 6
 
 def motor_control(q:mp.Queue):
-    while True:
-        try:
-            item = None
-            if(not q.empty()):
-                item = q.get()
-            else:
-                continue
-
-            match item[0]:
-                case ControlType.FORWARD:
-                    print(f"Setting Speed to {item[1]}")
-                    motor.motor_forward(int(item[1]))
-                case ControlType.BACKWARD:
-                    print(f"Setting Reverse Speed to {item[1]}")
-                    motor.motor_reverse(int(item[1]))
-                case ControlType.STOP:
-                    motor.motor_brake()
-                case ControlType.LEFT:
-                    motor.steerLeft(int(item[1]))
-                case ControlType.LEFT:
-                    motor.steerRight(int(item[1]))
-                case ControlType.STRAIGHT:
-                    motor.steerStraight()
-
-
-        except Exception as e:
-            print("Exiting Motor Process because of " + str(e))
-            break
+    
 
 def input_control(q:mp.Queue):
     counter = 20
@@ -65,23 +38,34 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 if __name__ == "__main__":
-	# Setup Queue
-    # Input is [ControlType, Value]
-    global input_process
-    motor.initialize_motor()
-    try:
-        q = mp.Queue()
-        signal.signal(signal.SIGINT, signal_handler)
-        # Setup Motor and Input Processes
-        input_process = mp.Process(target=input_control, args=(q,))
+    while True:
+        try:
+            item = None
+            for event in device.read_loop():
+                if event.type == evdev.ecodes.EV_KEY:
+                    print(evdev.categorize(event))
+                elif event.code == 3:
+                    print(f'Got a value of {event.value} from left trigger')
+                elif event.code == 5:
+                    item = [ControlType.FORWARD, (100* (event.value/1024))]
+                    break
 
-        # Start Processes
-        input_process.start()
+            match item[0]:
+                case ControlType.FORWARD:
+                    print(f"Setting Speed to {item[1]}")
+                    motor.motor_forward(int(item[1]))
+                case ControlType.BACKWARD:
+                    print(f"Setting Reverse Speed to {item[1]}")
+                    motor.motor_reverse(int(item[1]))
+                case ControlType.STOP:
+                    motor.motor_brake()
+                case ControlType.LEFT:
+                    motor.steerLeft(int(item[1]))
+                case ControlType.LEFT:
+                    motor.steerRight(int(item[1]))
+                case ControlType.STRAIGHT:
+                    motor.steerStraight()
 
-        motor_control(q)
-        input_process.join()
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        input_process.terminate()
-        input_process.join()
-        motor.cleanup()
+        except Exception as e:
+            print("Exiting Motor Process because of " + str(e))
+            break
