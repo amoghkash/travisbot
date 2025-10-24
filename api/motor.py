@@ -21,6 +21,7 @@ def initialize_motor():
 
 def standby(enable=True):
     global GPIO
+    GPIO.setmode(GPIO.BCM)
     GPIO.output(STBY, GPIO.HIGH if enable else GPIO.LOW)
 
 def motor_forward(speed):
