@@ -57,12 +57,9 @@ def input_control(q:mp.Queue):
             q.put([ControlType.FORWARD, (100* (event.value/1024))])
 
 def signal_handler(sig, frame):
-    global motor_process
     global input_process
     print("SigINT Recieved")
-    motor_process.terminate()
     input_process.terminate()
-    motor_process.join()
     input_process.join()
     motor.cleanup()
     sys.exit(0)
@@ -70,26 +67,21 @@ def signal_handler(sig, frame):
 if __name__ == "__main__":
 	# Setup Queue
     # Input is [ControlType, Value]
-    global motor_process
     global input_process
     motor.initialize_motor()
     try:
         q = mp.Queue()
         signal.signal(signal.SIGINT, signal_handler)
         # Setup Motor and Input Processes
-        motor_process = mp.Process(target=motor_control, args=(q,))
         input_process = mp.Process(target=input_control, args=(q,))
 
         # Start Processes
-        motor_process.start()
         input_process.start()
 
-        motor_process.join()
+        motor_control(q)
         input_process.join()
     except Exception as e:
         print(f"An error occurred: {e}")
-        motor_process.terminate()
         input_process.terminate()
-        motor_process.join()
         input_process.join()
         motor.cleanup()
