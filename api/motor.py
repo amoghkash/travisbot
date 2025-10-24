@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
 import time
-from gpiozero import Servo, PWMOutputDevice
 
 # Pin definitions
 PWMA = 18   # PWM pin for speed
