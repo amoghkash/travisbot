@@ -8,20 +8,17 @@ AIN1 = 23   # Direction pin 1
 AIN2 = 24   # Direction pin 2
 STBY = 25   # Standby pin
 
-# Setup
-GPIO.cleanup()
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(PWMA, GPIO.OUT)
-GPIO.setup(AIN1, GPIO.OUT)
-GPIO.setup(AIN2, GPIO.OUT)
-GPIO.setup(STBY, GPIO.OUT)
-
-# Initialize PWM at 50,000Hz
-global pwmA
-pwmA = GPIO.PWM(PWMA, 1000)
-pwmA.start(0)
-
-# Throttle Control
+# filepath: /Users/amoghkashyap/Documents/travisbotcontainer/travisbot/api/motor.py
+def initialize_motor():
+    global pwmA
+    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(PWMA, GPIO.OUT)
+    GPIO.setup(AIN1, GPIO.OUT)
+    GPIO.setup(AIN2, GPIO.OUT)
+    GPIO.setup(STBY, GPIO.OUT)
+    pwmA = GPIO.PWM(PWMA, 1000)
+    pwmA.start(0)
 
 def standby(enable=True):
     global GPIO

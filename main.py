@@ -72,6 +72,7 @@ if __name__ == "__main__":
     # Input is [ControlType, Value]
     global motor_process
     global input_process
+    motor.initialize_motor()
     try:
         q = mp.Queue()
         signal.signal(signal.SIGINT, signal_handler)
