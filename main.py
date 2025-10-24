@@ -3,6 +3,7 @@ import api.motor as motor
 from enum import Enum
 import time
 import evdev
+import signal
 
 class ControlType(Enum):
     FORWARD = 1
@@ -62,17 +63,20 @@ if __name__ == "__main__":
     try:
         q = mp.Queue()
 
-    # Setup Motor and Input Processes
+        # Setup Motor and Input Processes
         motor_process = mp.Process(target=motor_control, args=(q,))
         input_process = mp.Process(target=input_control, args=(q,))
 
-    # Start Processes
+        # Start Processes
         motor_process.start()
         input_process.start()
 
         motor_process.join()
         input_process.join()
-    except KeyboardInterrupt:
-        motor_process.kill()
-        input_process.kill()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        motor_process.terminate()
+        input_process.terminate()
+        motor_process.join()
+        input_process.join()
         motor.cleanup()
