@@ -17,9 +17,9 @@ GPIO.setup(AIN2, GPIO.OUT)
 GPIO.setup(STBY, GPIO.OUT)
 
 # Initialize PWM at 50,000Hz
-pwmA = GPIO.PWM(PWMA, 50000)
-pwmA.start()
-pwmA.ChangeDutyCycle(0.0)
+global pwmA
+pwmA = GPIO.PWM(PWMA, 1000)
+pwmA.start(0)
 
 # Throttle Control
 
@@ -28,7 +28,6 @@ def standby(enable=True):
     GPIO.output(STBY, GPIO.HIGH if enable else GPIO.LOW)
 
 def motor_forward(speed):
-    global pwmA
     global GPIO
     standby(True)
     print(f'Setting Speed to {speed}%')
@@ -85,9 +84,8 @@ if __name__ == "__main__":
         print("Motor forward")
         motor_forward(70)
         time.sleep(2)
-
-        print("Motor reverse")
-        motor_reverse(70)
+        print("slowing down")
+        motor_forward(20)
         time.sleep(2)
 
         print("Motor brake")
