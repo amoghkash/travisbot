@@ -54,8 +54,7 @@ def input_control(q:mp.Queue):
         elif event.code == 3:
             print(f'Got a value of {event.value} from left trigger')
         elif event.code == 5:
-            print(f'Got a value of {event.value} from right trigger')
-            q.put([ControlType.FORWARD, event.value/1024])
+            q.put([ControlType.FORWARD, (100* (event.value/1024))])
 
 def signal_handler(sig, frame):
     global motor_process

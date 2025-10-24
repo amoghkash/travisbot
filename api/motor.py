@@ -35,22 +35,22 @@ def standby(enable=True):
     global GPIO
     GPIO.output(STBY, GPIO.HIGH if enable else GPIO.LOW)
 
-def motor_forward(speed=1):
+def motor_forward(speed=100):
     global pwmA
     global GPIO
     standby(True)
     print(f'Setting Speed to {speed}%')
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.LOW)
-    pwmA.value = speed
+    pwmA.value = speed/100
 
-def motor_reverse(speed=1):
+def motor_reverse(speed=100):
     global pwmA
     global GPIO
     standby(True)
     GPIO.output(AIN1, GPIO.LOW)
     GPIO.output(AIN2, GPIO.HIGH)
-    pwmA.value = speed
+    pwmA.value = speed/100
 
 def motor_stop():
     global pwmA
@@ -89,11 +89,11 @@ def cleanup():
 if __name__ == "__main__":
     try:
         print("Motor forward")
-        motor_forward(70)
+        motor_forward(0.70)
         time.sleep(2)
 
         print("Motor reverse")
-        motor_reverse(70)
+        motor_reverse(0.70)
         time.sleep(2)
 
         print("Motor brake")
