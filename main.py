@@ -14,9 +14,6 @@ class ControlType(Enum):
     RIGHT = 5
     STRAIGHT = 6
 
-def motor_control(q:mp.Queue):
-    
-
 def input_control(q:mp.Queue):
     counter = 20
     device = evdev.InputDevice('/dev/input/event4') # Replace eventX with the correct device path
