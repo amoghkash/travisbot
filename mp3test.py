@@ -61,18 +61,22 @@ media = 1 #what should the media equal? Answer: should equal 1
 #cmd = df_command(0x07, 0)  # 0x07 = Specify EQ to normal (0)
 #ser.write(serial.to_bytes(cmd)) #trying this shit out from stack exchange
 #sleep(1)
-cmd = df_command(0x06, 15) #this cmd specifies the volume to 9 (0x06 is cmd to specify volume, 9 is parameter)\
+cmd = df_command(0x06, 25) #this cmd specifies the volume to 9 (0x06 is cmd to specify volume, 9 is parameter)\
+print("set volume to 25 with the following cmd")
+print(serial.to_bytes(cmd))
 ser.write(serial.to_bytes(cmd)) 
 sleep(1)
 #cmd = df_command(0x03, 0)
 #ser.write(serial.to_bytes(cmd))
 sleep(0.5)
-for i in range(6):
-    cmd = df_command(0x03, i)
-    ser.write(serial.to_bytes(cmd))
-    sleep(2)
-cmd = df_command(0x0D) #cmd to specify start repeat play
+#for i in range(6):
+print("play track 1 with the following cmd")
+cmd = df_command(0x03, 1)
+print(serial.to_bytes(cmd))
 ser.write(serial.to_bytes(cmd))
-sleep(0.5)
+    #sleep(2)
+#cmd = df_command(0x0D) #cmd to specify start repeat play
+#ser.write(serial.to_bytes(cmd))
+#sleep(0.5)
 #cmd = df_command(0x0E) #cmd to specify start repeat play
 #ser.write(serial.to_bytes(cmd))
