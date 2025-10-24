@@ -35,7 +35,7 @@ def standby(enable=True):
     global GPIO
     GPIO.output(STBY, GPIO.HIGH if enable else GPIO.LOW)
 
-def motor_forward(speed=100):
+def motor_forward(speed=1):
     global pwmA
     global GPIO
     standby(True)
@@ -44,7 +44,7 @@ def motor_forward(speed=100):
     GPIO.output(AIN2, GPIO.LOW)
     pwmA.value = speed
 
-def motor_reverse(speed=100):
+def motor_reverse(speed=1):
     global pwmA
     global GPIO
     standby(True)
