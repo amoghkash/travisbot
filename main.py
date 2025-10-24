@@ -38,7 +38,7 @@ if __name__ == "__main__":
     motor.initialize_motor()
     while True:
         item = None
-        device = evdev.InputDevice('/dev/input/event4') # Replace eventX with the correct device path
+        device = evdev.InputDevice('/dev/input/event2') # Replace eventX with the correct device path
         for event in device.read_loop():
             if event.type == evdev.ecodes.EV_KEY:
                 print(evdev.categorize(event))
