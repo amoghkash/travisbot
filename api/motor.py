@@ -11,34 +11,19 @@ STBY = 25   # Standby pin
 def initialize_motor():
     global pwmA
     global GPIO
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(PWMA, GPIO.OUT)
-    GPIO.setup(AIN1, GPIO.OUT)
-    GPIO.setup(AIN2, GPIO.OUT)
-    GPIO.setup(STBY, GPIO.OUT)
     pwmA = GPIO.PWM(PWMA, 1000)
     pwmA.start(0)
 
 def standby(enable=True):
-    global GPIO
-    GPIO.setmode(GPIO.BCM)
-    GPIO.output(STBY, GPIO.HIGH if enable else GPIO.LOW)
+    pass
 
 def motor_forward(speed):
-    global GPIO
     global pwmA
-    standby(True)
     print(f'Setting Speed to {speed}%')
-    GPIO.output(AIN1, GPIO.HIGH)
-    GPIO.output(AIN2, GPIO.LOW)
     pwmA.ChangeDutyCycle(speed)
 
 def motor_reverse(speed):
     global pwmA
-    global GPIO
-    standby(True)
-    GPIO.output(AIN1, GPIO.LOW)
-    GPIO.output(AIN2, GPIO.HIGH)
     pwmA.ChangeDutyCycle(speed)
 
 def motor_stop():
@@ -47,9 +32,6 @@ def motor_stop():
 
 def motor_brake():
     global pwmA
-    global GPIO
-    GPIO.output(AIN1, GPIO.HIGH)
-    GPIO.output(AIN2, GPIO.HIGH)
     pwmA.ChangeDutyCycle(0)
 
 # Steering Control
