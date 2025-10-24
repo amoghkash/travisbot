@@ -12,6 +12,7 @@ def initialize_motor():
     global pwmA
     global GPIO
     GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(PWMA, GPIO.OUT)
     pwmA = GPIO.PWM(PWMA, 1000)
     pwmA.start(0)
 
