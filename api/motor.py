@@ -11,7 +11,7 @@ STBY = 25   # Standby pin
 # filepath: /Users/amoghkashyap/Documents/travisbotcontainer/travisbot/api/motor.py
 def initialize_motor():
     global pwmA
-    GPIO.cleanup()
+    global GPIO
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(PWMA, GPIO.OUT)
     GPIO.setup(AIN1, GPIO.OUT)
@@ -26,6 +26,7 @@ def standby(enable=True):
 
 def motor_forward(speed):
     global GPIO
+    global pwmA
     standby(True)
     print(f'Setting Speed to {speed}%')
     GPIO.output(AIN1, GPIO.HIGH)
