@@ -1,6 +1,6 @@
 import RPi.GPIO as GPIO
 import time
-from gpiozero import Servo
+from gpiozero import Servo, PWMOutputDevice
 
 # Pin definitions
 PWMA = 18   # PWM pin for speed
@@ -24,12 +24,11 @@ GPIO.setup(AIN2, GPIO.OUT)
 GPIO.setup(STBY, GPIO.OUT)
 
 # Initialize PWM at 50,000Hz
-pwmA = GPIO.PWM(PWMA, 5000)
+pwmA = GPIO.PWM(PWMA, 50000)
 pwmA.start(0)
-
+pwmA.ChangeDutyCycle(0)
 #pwmB = GPIO.PWM(PWMB, 5000)
 #pwmB.start(0)
-servo = Servo(servoPin)
 
 # Throttle Control
 
@@ -41,6 +40,7 @@ def motor_forward(speed=100):
     global pwmA
     global GPIO
     standby(True)
+    print(f'Setting Speed to {speed}%')
     GPIO.output(AIN1, GPIO.HIGH)
     GPIO.output(AIN2, GPIO.LOW)
     pwmA.ChangeDutyCycle(speed)
@@ -84,7 +84,7 @@ def cleanup():
     standby(False)
     pwmA.stop()
     GPIO.cleanup()
-    servo.close()
+    #servo.close()
 
 # Example usage
 if __name__ == "__main__":

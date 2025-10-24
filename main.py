@@ -4,6 +4,7 @@ from enum import Enum
 import time
 import evdev
 import signal
+import sys
 
 class ControlType(Enum):
     FORWARD = 1
@@ -56,13 +57,25 @@ def input_control(q:mp.Queue):
             print(f'Got a value of {event.value} from right trigger')
             q.put([ControlType.FORWARD, 100*(event.value/1024)])
 
+def signal_handler(sig, frame):
+    global motor_process
+    global input_process
+    print("SigINT Recieved")
+    motor_process.terminate()
+    input_process.terminate()
+    motor_process.join()
+    input_process.join()
+    motor.cleanup()
+    sys.exit(0)
 
 if __name__ == "__main__":
 	# Setup Queue
     # Input is [ControlType, Value]
+    global motor_process
+    global input_process
     try:
         q = mp.Queue()
-
+        signal.signal(signal.SIGINT, signal_handler)
         # Setup Motor and Input Processes
         motor_process = mp.Process(target=motor_control, args=(q,))
         input_process = mp.Process(target=input_control, args=(q,))
