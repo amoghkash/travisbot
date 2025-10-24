@@ -11,3 +11,10 @@ Using XPadNeo and bluetooth
 | Right Joystick X Direction | Code 3 | -32767 to 32767 |
 | Right Joystick Y Direction | Code 4 | -32767 to 32767 |
 | Right Trigger | Code 5 | -1023 to 1023 |
+| A Button | Code 304 | 0 or 1 |
+| B Button | Code 305 | 0 or 1 |
+| Y Button | Code 308 | 0 or 1 |
+| X Button | Code 307 | 0 or 1 |
+
+
+
