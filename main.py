@@ -2,6 +2,7 @@ import multiprocessing as mp
 import api.motor as motor
 from enum import Enum
 import time
+import evdev
 
 class ControlType(Enum):
     FORWARD = 1
@@ -43,14 +44,17 @@ def motor_control(q:mp.Queue):
 
 def input_control(q:mp.Queue):
     counter = 20
-    while True:
-        try:
-            q.put([ControlType.FORWARD, counter % 100])
-            time.sleep(0.5)
-            counter += 20
-        except:
-            print("Exiting Input")
-            break
+    device = evdev.InputDevice('/dev/input/event4') # Replace eventX with the correct device path
+    counter = 0
+    for event in device.read_loop():
+        if event.type == evdev.ecodes.EV_KEY:
+            print(evdev.categorize(event))
+        elif event.code == 3:
+            print(f'Got a value of {event.value} from left trigger')
+        elif event.code == 5:
+            print(f'Got a value of {event.value} from right trigger')
+            q.put([ControlType.FORWARD, 100*(event.value/1024)])
+
 
 if __name__ == "__main__":
 	# Setup Queue
@@ -68,5 +72,7 @@ if __name__ == "__main__":
 
         motor_process.join()
         input_process.join()
-    except:
+    except KeyboardInterrupt:
+        motor_process.kill()
+        input_process.kill()
         motor.cleanup()
