@@ -162,9 +162,9 @@ class MP3Player:
     
         
     def sendStack(self): #this sends the chain of UART signals
-        print(f"command is type {type(self.cmd)}")
-        print(f"param_high is type {type(self.param_high)}")
-        print(f"command is type {type(self.param_low)}")
+        #print(f"command is type {type(self.cmd)}")
+        #print(f"param_high is type {type(self.param_high)}")
+        #print(f"command is type {type(self.param_low)}")
         self.feedback = 0x00
         self.length = 0x06
         checksum = 0xFFFF - (self.version + self.length + self.cmd + self.feedback + self.param_high + self.param_low) + 1
@@ -173,20 +173,20 @@ class MP3Player:
         frame = serial.to_bytes(bytes([self.start_byte,self.version,self.length,self.cmd,self.feedback,self.param_high,self.param_low,self.checksum_high,self.checksum_low, self.end_byte]))
         # frame = bytes([self.start_byte,self.version,self.length,self.cmd,self.feedback,self.param_high,self.param_low,self.checksum_high,self.checksum_low, self.end_byte])
 
-        print(frame)
+        #print(frame)
         ser.write(frame)       
 
     
 
     
-dfrobot = MP3Player()
-dfrobot.changeVolumeTo(15)
-sleep(1)
+#dfrobot = MP3Player()
+#dfrobot.changeVolumeTo(15)
+#sleep(1)
 
 #dfrobot.repeatPlay(1)
-dfrobot.playTrackNumber(4)
+#dfrobot.playTrackNumber(4)
 #sleep(5)
 #dfrobot.playTrackNumber(3)
 
 
-ser.close()
+
